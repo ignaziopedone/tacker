@@ -62,12 +62,9 @@ echo "Router creation done!"
 
 #upload image
 echo "Uploading images..."
-openstack image create --public --disk-format qcow2 --container-format bare --file '/home/ignazio/Scrivania/US1604.qcow2' ubuntu1604
-openstack image create --public --disk-format qcow2 --container-format bare --file '/home/ignazio/Scrivania/iptables.qcow2' iptables
-openstack image create --public --disk-format qcow2 --container-format bare --file '/home/ignazio/Scrivania/xenial-server-cloudimg-amd64-disk1.img' ubuntu
+#Insert here some image.qcow2 path in order to load them in glance
 echo "Images uploaded!"
 
 echo "Change the last row in OpenstackConf.sh with the address or router given..."
 router=$(openstack router show router | awk '/external_gateway_info/{print $12}')
 echo "The router address is: $router"
-
