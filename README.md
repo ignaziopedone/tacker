@@ -108,6 +108,26 @@ As is shown in the `local.conf` file the user will be `admin` and the password `
 
 # Let's start with a VNF
 
+## Register a VIM
+In order to start every configuration and deploy the VNF the first step should be register a VIM (the actual openstack installed on the machine).
+In order to doing this you must follow this command:
+
+```bash
+$ openstack vim register --config-file vim_config.yaml --description 'my first vim' --is-default hellovim
+```
+
+The `vim_config.yaml` should report these informations:
+
+```json
+auth_url: 'https://10.1.0.5:5000'
+username: 'nfv_user'
+password: 'mySecretPW'
+project_name: 'nfv'
+project_domain_name: 'Default'
+user_domain_name: 'Default'
+# cert_verify: 'True' This line is optional
+```
+
 ## VNF Descriptor (VNFD)
 
 In order to create a vnf instance we have to define its descriptor first. Openstack tacker have, as usual for a openstack service, a simple cli and we will show below how to use it. To begin with we could define a simple vnf descriptor (in TOSCA language) `example.yaml`:
