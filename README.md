@@ -125,6 +125,7 @@ password: 'mySecretPW'
 project_name: 'nfv'
 project_domain_name: 'Default'
 user_domain_name: 'Default'
+
 # cert_verify: 'True' This line is optional
 ```
 
