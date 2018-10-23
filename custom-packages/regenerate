@@ -1,0 +1,11 @@
+#!/bin/bash
+
+openstack vnf delete test-vnf
+echo "[INFO] Instance deleted"
+openstack vnf descriptor delete vnf-sample
+echo "[INFO] VNF Descriptor deleted"
+openstack vnf descriptor list
+openstack vnf descriptor create --vnfd-file vnf-sample.yaml vnf-sample
+echo "[INFO] New VNF Descriptor created"
+openstack vnf create --vnfd-name vnf-sample test-vnf
+echo "[INFO] Instance launched"
