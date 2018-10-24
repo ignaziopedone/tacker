@@ -1,0 +1,6 @@
+nsd:
+  vl1_name: mgmt
+  vl2_name: net0
+  net_src_port_id: 9fc95369-c2f8-4b25-b2ce-ab1f48f5e9cd
+  ip_dest_prefix: 10.10.0.7/24
+  net_dst_port_id: 3041a42c-75ed-486a-a79f-2572c90e49da
