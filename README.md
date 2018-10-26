@@ -366,6 +366,12 @@ vdus:
 __N.B. The last configuration file and the related descriptor (VNFD), not linked to the first example, is reported in the git repository [(Openstack tacker github)](https://github.com/openstack/tacker/tree/master/samples/tosca-templates)__.
 
 
+# How to set up a simple example of VNF Forwarding Graph and NSD with tacker
+
+Every single detail plus a little demo is in the link shown below:
+
+[VNFFGs/NSDs examples](./custom-packages/README.md)
+
 # Troubleshooting
 
 ## Problem creating openstack volumes (Snapshot are your best friends!)
@@ -409,6 +415,92 @@ We should consider the possibility to disable the port-security on the link dire
             node: VDU1
 ```
 
+## Installing also kuryr and Kubernetes
+In order to perform also the installation with devstack of those components, we have to change something. In particular we have to uncomment the part of `local.conf` in the general installation procedure. This is not sufficient becouse there are some problems between tacker and kuryr installation, so we have to clone in another git repository the tacker opestack git repo. Then we should change the following line in file `devstack/settings`:
+
+```
+...
+if [ "${KUBERNETES_VIM}" == "True" ]; then
+    K8S_PHYS_NET=${K8S_PHYS_NET:-"k8s-physnet"}
+    BR_K8S=${BR_K8S:-"br-k8s0"}
+    NET_K8S=${NET_K8S:-"public"} #<----- LINE TO CHANGE
+    SUBNET_K8S=${SUBNET_K8S:-"public-subnet"}
+    FIXED_RANGE_K8S=${FIXED_RANGE_K8S:-192.168.28.0/22}
+    NETWORK_GATEWAY_K8S=${NETWORK_GATEWAY_K8S:-192.168.28.1}
+    NETWORK_GATEWAY_K8S_IP=${NETWORK_GATEWAY_K8S_IP:-192.168.28.1/24}
+...
+```
+
+Changing that line should allow you to perform smoothly the installation process with devstack. Of couse then you have to change the `local.conf` file in order to clone your repository instead of the one provided by openstack. Here and example of `local.conf`:
+
+```yaml
+[[local|localrc]]
+############################################################
+# Customize the following HOST_IP based on your installation
+############################################################
+HOST_IP=127.0.0.1
+
+ADMIN_PASSWORD=devstack
+MYSQL_PASSWORD=devstack
+RABBIT_PASSWORD=devstack
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+SERVICE_TOKEN=devstack
+
+############################################################
+# Customize the following section based on your installation
+############################################################
+
+# Pip
+PIP_USE_MIRRORS=False
+USE_GET_PIP=1
+
+#OFFLINE=False
+#RECLONE=True
+
+# Logging
+LOGFILE=$DEST/logs/stack.sh.log
+VERBOSE=True
+ENABLE_DEBUG_LOG_LEVEL=True
+ENABLE_VERBOSE_LOG_LEVEL=True
+
+# Neutron ML2 with OpenVSwitch
+Q_PLUGIN=ml2
+Q_AGENT=openvswitch
+
+# Disable security groups
+Q_USE_SECGROUP=False
+LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
+
+# Enable heat, networking-sfc, barbican and mistral
+enable_plugin heat https://git.openstack.org/openstack/heat master
+enable_plugin networking-sfc git://git.openstack.org/openstack/networking-sfc master
+enable_plugin barbican https://git.openstack.org/openstack/barbican master
+enable_plugin mistral https://git.openstack.org/openstack/mistral master
+
+# Ceilometer
+#CEILOMETER_PIPELINE_INTERVAL=300
+enable_plugin ceilometer https://git.openstack.org/openstack/ceilometer master
+enable_plugin aodh https://git.openstack.org/openstack/aodh master
+
+# Tacker
+enable_plugin tacker https://github.com/qubitn1nja/tacker master
+
+enable_service n-novnc
+enable_service n-cauth
+
+disable_service tempest
+
+# Enable Kubernetes and kuryr-kubernetes
+KUBERNETES_VIM=True
+NEUTRON_CREATE_INITIAL_NETWORKS=False
+enable_plugin kuryr-kubernetes https://git.openstack.org/openstack/kuryr-kubernetes master
+enable_plugin neutron-lbaas git://git.openstack.org/openstack/neutron-lbaas master
+enable_plugin devstack-plugin-container https://git.openstack.org/openstack/devstack-plugin-container master
+
+[[post-config|/etc/neutron/dhcp_agent.ini]]
+[DEFAULT]
+enable_isolated_metadata = True
+```
 
 # A couple of interesting links to keep in mind
 [(Openstack tacker github)](https://github.com/openstack/tacker): you can fid there all the samples and documentation about NFV orchestration through Openstack.
