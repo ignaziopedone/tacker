@@ -1,0 +1,10 @@
+---
+- hosts: vnsf
+  become: true
+  become_user: root
+  remote_user: ignazio
+  tasks:
+  - name: Install packages
+    apt: name={{ item }} state=installed
+    with_items:
+      - "{{ packet }}"
