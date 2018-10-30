@@ -2,7 +2,7 @@
 - hosts: vnsf
   become: true
   become_user: root
-  remote_user: ubuntu
+  remote_user: ignazio
   tasks:
   - name: Install packages
     apt: name={{ packets }} state=installed

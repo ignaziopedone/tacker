@@ -1,0 +1,4 @@
+---
+dst_dir: "/tmp/mspl/l3_filter/"
+dst_file: "/tmp/mspl/l3_filter/configuration.mspl"
+script_path: "/home/ignazio/src/run.py"
