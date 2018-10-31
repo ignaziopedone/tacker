@@ -1,0 +1,16 @@
+---
+- hosts: "{{ target }}"
+  become: true
+  become_user: root
+  remote_user: ubuntu
+  tasks:
+
+  - name: Include vars depending on specific vnsf
+    include_vars: settings_l3filter.yml
+
+  - name: Apply the right configuration to the vnsf.
+    command: python "{{ script_path }}" "delete-policies"
+    register: output
+
+  - debug:
+      var: output.stdout_lines

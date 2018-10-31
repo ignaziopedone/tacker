@@ -20,8 +20,12 @@
 
   - name: Apply the right configuration to the vnsf.
     command: python "{{ script_path }}" "set-policies" "{{ dst_file }}"
+    register: output
 
   - name: Delete configuration file
     file:
       state: absent
       path: "{{ dst_file }}"
+
+  - debug:
+      var: output.stdout_lines

@@ -1,0 +1,20 @@
+---
+- hosts: "{{ target }}"
+  become: true
+  become_user: root
+  remote_user: ubuntu
+  tasks:
+
+  - name: Include vars depending on specific vnsf
+    include_vars: settings_l3filter.yml
+
+  - name: Create target directory
+    file: path="{{ dst_dir }}" state=directory mode=0755
+
+
+  - name: Apply the right configuration to the vnsf.
+    command: python "{{ script_path }}" "delete-policy" "{{ rule }}"
+    register: output
+
+  - debug:
+      var: output.stdout_lines
